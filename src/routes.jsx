@@ -4,6 +4,7 @@ import Signup from "./Pages/signUp/signUp1/SignUp";
 import Home from "./Pages/Home/Home";
 import SignUp2 from "./Pages/signUp/signUp2/signUp2";
 import Login from "./Pages/loginPage/Login";
+import Signup3 from "./Pages/signUp/signUp3/Signup3";
 
 // Define routes array first
 let routes = [
@@ -12,6 +13,7 @@ let routes = [
   { path: "/login", element: <Login /> },
 
   { path: "/signup2", element: <SignUp2 /> },
+  { path: "/signup3", element: <Signup3 /> },
   { path: "/detail", element: <AccountDetail /> },
   { path: "/", element: <LoginPage /> },
 ];

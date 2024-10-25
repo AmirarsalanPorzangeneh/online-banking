@@ -28,7 +28,7 @@ export default function SignupForm2() {
           placeholder=" لطفا ایمیل خود را وارد کنید"
           dir="ltr"
         />
-        <Buttons btnName={"ثبت نام"} to={"/"} />
+        <Buttons btnName={"ادامه"} to={"/signup3"} />
 
         <Buttons
           className={
