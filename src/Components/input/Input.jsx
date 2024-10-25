@@ -10,6 +10,8 @@ export default function Input(props) {
     dir,
     className,
     onClick,
+    onChange,
+    id,
   } = props;
 
   return (
@@ -31,6 +33,8 @@ export default function Input(props) {
           type={type}
           placeholder={placeholder}
           dir={dir}
+          onChange={onChange}
+          id={id}
         />
       </div>
     </div>

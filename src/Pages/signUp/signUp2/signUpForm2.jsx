@@ -13,6 +13,7 @@ export default function SignupForm2() {
     minDate: "attr",
     maxDate: "attr",
   });
+
   return (
     <ContainerTheme>
       <Form Header={"اینترنت بانک من"} FormTitle={"ورود به حساب کاربری"}>
