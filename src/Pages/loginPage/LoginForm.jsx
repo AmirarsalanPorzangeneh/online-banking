@@ -2,57 +2,46 @@ import Buttons from "../../Components/buttons/Buttons";
 import Input from "../../Components/input/Input";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Form from "../../Components/form/Form";
 import SubLine from "../../Components/subLine/SubLine";
 import Links from "../../Components/links/Sublink/Links";
 import ContainerTheme from "../../Layout/container/Container";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
 
 export default function LoginForm() {
   const [visibility, setVisibility] = useState(false);
   let clickHandler = () => {
-    setVisibility(!visibility);
+    setVisibility((visibility) => !visibility);
   };
 
-  const [values, setValues] = useState({});
-  const [error, setError] = useState({});
-  const [submit, setSubmit] = useState(false);
+  const schema = yup.object().shape({
+    email: yup
+      .string()
+      .required("ایمیل الزامی است")
+      .email("ایمیل معتبر وارد کنید"),
 
-  const onChange = (e) => {
-    const id = e.target.id;
-    const value =
-      e.target.type === "checkbox" ? e.target.checked : e.target.value;
+    password: yup
+      .string()
+      .required("رمز عبور الزامی است")
+      .min(8, "رمز عبور باید حداقل 8 خرف باشد")
+      .matches(/[a-z]/, "رمز عبور باید حداقل از یک حرف کوچک استفاده شود")
+      .matches(/[A-Z]/, "رمز عبور باید حداقل از یک حرف بزرگ استفاده شود")
+      .matches(/\d/, "رمز باید حداقل از یک عدد تشکیل شود")
+      .matches(/[@$!%*?&]/, "رمز عبور باید شامل حداقل یک خرف خاص باشد"),
+  });
 
-    setValues((previousState) => ({ ...previousState, [id]: value }));
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(schema) });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setError(validate(values));
-    setSubmit(true);
-  };
-
-  useEffect(() => {
-    console.log(error);
-    if (Object.keys(error).length === 0 && submit) {
-      console.log(values);
-    }
-  }, [error]);
-
-  const validate = (value) => {
-    const errors = {};
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-    if (!value.email) {
-      errors.email = "ایمیل خود را وارد کنید";
-    } else if (!regex.test(values.email)) {
-      errors.email = "فرمت ایمیل اشتباه است";
-    }
-    if (!value.password) {
-      errors.password = "رمز عبور خود را وارد کنید";
-    } else if (value.password.length < 4) {
-      errors.password = "تعداد کاراکتر کمتر از حد مجاز";
-    }
-    return errors;
+  const onSubmit = (data) => {
+    console.log(data);
+    console.log("logged");
   };
 
   return (
@@ -61,16 +50,23 @@ export default function LoginForm() {
         <Form
           Header={"اینترنت بانک من"}
           FormTitle={"ورود به حساب کاربری"}
-          onSubmit={handleSubmit}>
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <Input
             inputName="پست الکترونیک"
-            type="text"
+            type="email"
             placeholder="لطفا ایمیل خود را وارد کنید"
             dir={"ltr"}
-            onChange={onChange}
+            // onChange={onChange}
             id="email"
+            register={register("email")}
           />
-          <p style={{ color: "red" }}>{error.email}</p>
+          {errors.email && (
+            <p style={{ color: "red", paddingBottom: "10px" }}>
+              {" "}
+              {errors.email?.message}
+            </p>
+          )}
           <Input
             inputName={"رمز عبور"}
             type={visibility ? "type" : "password"}
@@ -79,14 +75,21 @@ export default function LoginForm() {
             dir={"ltr"}
             className={"pl-11 "}
             onClick={clickHandler}
-            onChange={onChange}
+            // onChange={onChange}
             id="password"
+            register={register("password")}
           />
-          <p style={{ color: "red" }}>{error.password}</p>
-          <button
-            className={`text-white w-full my-2 py-2 px-2 rounded-md bg-blue-600 hover:bg-blue-700 transition-all ease-in-out delay-200`}>
-            ورود به حساب
-          </button>
+          {errors.password && (
+            <p style={{ color: "red", paddingBottom: "10px" }}>
+              {" "}
+              {errors.password?.message}
+            </p>
+          )}
+          <Buttons
+            btnName={"ورود به حساب"}
+            type="button"
+            onClick={handleSubmit(onSubmit)}
+          />
 
           <SubLine SubText={"عضو نیستید ؟"}>
             <Links linkName="ایجاد حساب" to="/signup" />

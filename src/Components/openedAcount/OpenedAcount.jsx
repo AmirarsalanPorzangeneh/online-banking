@@ -6,7 +6,7 @@
 // export default function OpenedAcount() {
 //   return (
 //     <div className="container2">
-//       <img src={img} />
+//       <img src={'../public/images/card.png'} />
 //       <span className="open">افتتاح حساب بانکی</span>
 //       <form>
 //         <label style={{ color: "white" }}>نوع حساب</label>

@@ -5,13 +5,14 @@ import routes from "./routes";
 import SidebarForm from "./Components/sidebar/SidebarForm";
 import HeaderForm from "./Components/header/HeaderForm";
 import { useLocation } from "react-router-dom";
+import ContainerTheme from "./Layout/container/Container";
+
 
 export default function App() {
   const [expanded, setExpanded] = useState(true);
   const clickHandler = () => setExpanded((makeOpen) => !makeOpen);
   let router = useRoutes(routes);
   let location = useLocation();
-  
 
   /* select all the elements of details tag that is for top left icon of the user and stores it in the 'allDropdown' variable. */
   const allDropdowns = document.querySelectorAll(".user-dropdown");
@@ -22,16 +23,20 @@ export default function App() {
     [...allDropdowns].forEach((dropdown) => (dropdown.open = false));
   });
 
+  const isAuthPage =
+    location.pathname === "/signup" || location.pathname === "/" || location.pathname === "*" || location.pathname === "/error" ;
+
   return (
     <div>
-      {location.pathname === "/home" ? (
-        <>
+      {!isAuthPage ? (
+        <ContainerTheme>
           <HeaderForm clickHandler={clickHandler} />
-          <SidebarForm expanded={expanded} />{" "}
-        </>
+          <SidebarForm expanded={expanded} />
+          {router}
+        </ContainerTheme>
       ) : (
-        <>{router} </>
+        <>{router}</>
       )}
-    </div>
+    </div>  
   );
 }
