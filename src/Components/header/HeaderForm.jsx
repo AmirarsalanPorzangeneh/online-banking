@@ -35,7 +35,7 @@ export default function HeaderForm(props) {
         <HeaderIconHolder>
           {/* Button for medium and larger screens */}
           <Buttons
-            className="ml-5"
+            
             btnName={
               <span>
                 <span className="hidden md:block">
@@ -56,7 +56,7 @@ export default function HeaderForm(props) {
             className={"mx-3 cursor-pointer"}
           />
 
-          <DropDown username={"jese Leos"} email={"name@example.com"} />
+          <DropDown username={"jese Leos"} email={"name@example.com"}  />
         </HeaderIconHolder>
       </HeaderHolder>
     </div>

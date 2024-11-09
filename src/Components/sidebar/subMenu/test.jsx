@@ -8,6 +8,8 @@ import MoveToInboxIcon from "@mui/icons-material/MoveToInbox";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useState } from "react";
+import SubMenu from "./subMenu/SubMenu";
+import SubMenuHandler from "../subMenuHandler/SubMenuHandler";
 
 export default function SidebarForm(props) {
   const [arrowDown, setArrowDown] = useState(true);
@@ -38,32 +40,25 @@ export default function SidebarForm(props) {
           icon={<ShoppingBagIcon />}
           liName={"تنظیمات"}
           expanded={expanded}
-          subIcon={expanded && <KeyboardArrowDownIcon />}
+          subIcon={<KeyboardArrowDownIcon />}
           onClick={arrowHandler}
           className={arrowDown ? "rotate-0 text-white" : "rotate-180"}
         />
-
         {expanded && (
-          <div
-            className={`border-b-2 border-gray-600 transition-all duration-300 ease-in-out flex flex-col space-y-6 pr-4 [&>li:hover]:text-gray-400 [&>li:hover]:transition-all [&>li:hover]:delay-100 ${
-              arrowDown ? "max-h-96" : "max-h-0 overflow-hidden"
-            }`}
+          <SubMenuHandler
+            className={arrowDown ? "max-h-96" : "max-h-0 overflow-hidden"}
           >
-            <li
-              className={`mr-8 transition-opacity duration-300 ease-in-out   ${
-                arrowDown ? "opacity-100 " : "opacity-0 "
-              }`}
-            >
-              مسدود سازی
-            </li>
-            <li
-              className={`mr-8 pb-8 transition-opacity duration-300 ease-in-out ${
-                arrowDown ? "opacity-100" : "opacity-0"
-              }`}
-            >
-              تغییر رمز اولیه ورود
-            </li>
-          </div>
+            <SubMenu
+              className={
+                arrowDown ? "opacity-100 hover:text-gray-400" : " opacity-0"
+              }
+              name={"مسدود سازی"}
+            />
+            <SubMenu
+              className={arrowDown ? "opacity-100 " : " opacity-0"}
+              name={"تغییر رمز اولیه ورود"}
+            />
+          </SubMenuHandler>
         )}
       </SideBarUl>
     </SideBarWhole>
