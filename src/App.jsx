@@ -7,7 +7,6 @@ import HeaderForm from "./Components/header/HeaderForm";
 import { useLocation } from "react-router-dom";
 import ContainerTheme from "./Layout/container/Container";
 
-
 export default function App() {
   const [expanded, setExpanded] = useState(true);
   const clickHandler = () => setExpanded((makeOpen) => !makeOpen);
@@ -24,19 +23,24 @@ export default function App() {
   });
 
   const isAuthPage =
-    location.pathname === "/signup" || location.pathname === "/" || location.pathname === "*" || location.pathname === "/error" ;
+    location.pathname === "/signup" || location.pathname === "/";
+  const isErrorPage = location.pathname === "*";
 
   return (
     <div>
-      {!isAuthPage ? (
+      {!isAuthPage && !isErrorPage ? (
         <ContainerTheme>
           <HeaderForm clickHandler={clickHandler} />
-          <SidebarForm expanded={expanded} />
-          {router}
+          <div className="flex">
+            <SidebarForm expanded={expanded} />
+            <div className="flex items-center justify-center flex-1 ">
+              {router}
+            </div>
+          </div>
         </ContainerTheme>
       ) : (
-        <>{router}</>
+        <div >{router}</div>
       )}
-    </div>  
+    </div>
   );
 }

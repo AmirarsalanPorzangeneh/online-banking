@@ -8,6 +8,7 @@ import MoveToInboxIcon from "@mui/icons-material/MoveToInbox";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function SidebarForm(props) {
   const [arrowDown, setArrowDown] = useState(true);
@@ -15,7 +16,7 @@ export default function SidebarForm(props) {
   console.log(arrowDown);
 
   const { expanded } = props;
-
+  const navigate = useNavigate();
   return (
     <SideBarWhole expanded={expanded}>
       <SideBarUl>
@@ -23,16 +24,20 @@ export default function SidebarForm(props) {
           icon={<TextSnippetIcon />}
           liName={"خانه"}
           expanded={expanded}
+          to="/homedata"
         />
+
         <SideBarLi
           icon={<PieChartIcon />}
           liName={"گزارش  "}
           expanded={expanded}
+          to={"/report"}
         />
         <SideBarLi
           icon={<MoveToInboxIcon />}
           liName={"انتقال وجه"}
           expanded={expanded}
+          to={"/moneytransfer"}
         />
         <SideBarLi
           icon={<ShoppingBagIcon />}
@@ -53,6 +58,7 @@ export default function SidebarForm(props) {
               className={`mr-8 transition-opacity duration-300 ease-in-out   ${
                 arrowDown ? "opacity-100 " : "opacity-0 "
               }`}
+              onClick={() => navigate("/blockingaccount")}
             >
               مسدود سازی
             </li>
@@ -60,9 +66,11 @@ export default function SidebarForm(props) {
               className={`mr-8 pb-8 transition-opacity duration-300 ease-in-out ${
                 arrowDown ? "opacity-100" : "opacity-0"
               }`}
+              onClick={() => navigate('/changingpass')}
             >
               تغییر رمز اولیه ورود
             </li>
+          
           </div>
         )}
       </SideBarUl>
