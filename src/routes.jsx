@@ -8,7 +8,7 @@ import MoneyTransfer from "./Pages/moneyTransfer/MoneyTransfer";
 import ChangingPass from "./Pages/changingPass/ChangingPass";
 import BlockingAccount from "./Pages/blockingAccount/BlockingAccount";
 import PooyaPass from "./Components/pooyaPass/PooyaPass";
-
+import AccountLists from "./Pages/AccountLists/AccountLists";
 
 let routes = [
   { path: "/homedata", element: <HomeData /> },
@@ -18,11 +18,11 @@ let routes = [
   { path: "/report", element: <Report /> },
   { path: "/moneytransfer", element: <MoneyTransfer /> },
   { path: "/changingpass", element: <ChangingPass /> },
-  { path: "/blockingaccount", element: <BlockingAccount /> },
-  { path: "/pooya", element: <PooyaPass/> },
+  { path: "/block", element: <BlockingAccount /> },
+  { path: "/lists", element: <AccountLists /> },
+  { path: "/pooya", element: <PooyaPass /> },
 
   { path: "*", element: <Error /> },
-  
 ];
 
 export default routes;

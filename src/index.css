@@ -80,3 +80,100 @@ details ul li:first-child:hover {
 details summary {
   list-style: none;
 }
+
+.list-container {
+  width: 480px;
+  height: 290px;
+}
+
+.list {
+  padding: 30px;
+  color: #fff;
+  border: 1px solid #000;
+  background-color: #1f2a37;
+}
+
+.list li {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 0;
+  border-bottom: none;
+
+  span {
+    width: 50%;
+  }
+}
+
+ul.list li:hover {
+  background-color: #374151;
+}
+
+ul.list > li:not(:last-of-type) {
+  border-bottom: 1px solid #374151;
+}
+
+.list span {
+  padding: 20px 20px;
+}
+
+.list-btn {
+  width: 100%;
+  padding: 5px 10px;
+  margin-top: 10px;
+  outline: none;
+  border-radius: 10px;
+  border: none;
+  margin-top: 30px;
+  background-color: #1a56db;
+}
+
+.list-container {
+  width: 480px;
+  height: max-content;
+  padding: 30px;
+  color: #fff;
+  background-color: #1f2a37;
+  display: flex;
+  flex-direction: column;
+}
+
+.list-header {
+  font-size: 25px;
+  margin-bottom: 15px;
+}
+
+.list-content li {
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+  padding: 20px 0 20px 0;
+
+  span,
+  div {
+    padding: 0 7px;
+  }
+}
+
+.list-content li:not(:last-of-type) {
+  border-bottom: 1px solid rgb(255, 255, 255, 0.1);
+}
+
+.list-content li:hover {
+  background-color: #374151;
+}
+
+/* .list-content li div:last-of-type {
+  position: relative;
+  top: 50%;
+} */
+
+.account-type {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.account-type span:last-child {
+  color: #9ca3af;
+}
