@@ -12,11 +12,32 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import CustomDate from "../../../Components/CustomDate/CustomDate";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import {
+  isPersian,
+  hasPersian,
+  toPersianChars,
+} from "@persian-tools/persian-tools";
 
 export default function SignupForm() {
   const schema = yup.object().shape({
-    name: yup.string().required("نام الزامی است"),
-    lastName: yup.string().required("نام خانوادگی الزامی است "),
+    name: yup
+      .string()
+      .required("نام الزامی است")
+      .matches(/^[^0-9]+$/, "نام نباید شامل عدد باشد")
+      .matches(
+        /^[^!@#$%^&*()-_=+~`.<>?/";:]+$/,
+        "نام نباید حاوی کاراکتر خاص باشد"
+      )
+      .test("name", "نام باید با حروف فارسی وارد شود", isPersian),
+    lastName: yup
+      .string()
+      .required("نام خانوادگی الزامی است")
+      .matches(/^[^0-9]+$/, "نام خانوادگی نباید شامل عدد باشد")
+      .matches(
+        /^[^!@#$%^&*()-_=+~`.<>?/";:]+$/,
+        "نام خانوادگی نباید حاوی کاراکتر خاص باشد"
+      )
+      .test("lastname", "نام خانوادگی باید با حروف فارسی وارد شود", isPersian),
 
     idNumber: yup
       .string()
@@ -120,8 +141,7 @@ export default function SignupForm() {
       <Form
         Header="اینترنت بانک من"
         FormTitle="ایجاد حساب کاربری"
-        onSubmit={handleSubmit(onSubmit)}
-      >
+        onSubmit={handleSubmit(onSubmit)}>
         {formStep === 0 && (
           <>
             <Input
