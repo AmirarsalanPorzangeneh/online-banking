@@ -1,0 +1,20 @@
+.container4 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 384px;
+  border-radius: 8px;
+  padding: 32px;
+  background-color: #1f2a37;
+}
+
+.container4 span {
+  font-size: 24px;
+  color: #fff;
+  margin-top: 15px;
+}

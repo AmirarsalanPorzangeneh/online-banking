@@ -1,0 +1,20 @@
+/* .container3 {
+  display: flex;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 384px;
+  border-radius: 8px;
+  padding: 32px;
+  background-color: #1f2a37;
+}
+p {
+  font-size: 20px;
+  color: #fff;
+  padding-bottom: 20px;
+} */
+
+input[type="number"]::placeholder {
+  text-align: center;
+}
