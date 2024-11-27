@@ -14,15 +14,13 @@ export default function Form(props) {
         <form
           style={{ background: "#1F2A37" }}
           className="px-5 py-6 rounded-lg relative"
-          onSubmit={onSubmit}
-        >
+          onSubmit={onSubmit}>
           <h3 className="text-white mb-6 font-semibold">{FormTitle}</h3>
 
           {icon && (
             <div
               className="absolute top-6 left-4 text-white cursor-pointer hover:text-gray-300 transition"
-              onClick={onClose}
-            >
+              onClick={onClose}>
               {icon}
             </div>
           )}

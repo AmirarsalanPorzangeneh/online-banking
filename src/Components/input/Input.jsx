@@ -22,8 +22,7 @@ export default function Input(props) {
         {Icon && (
           <div
             className="absolute left-3 text-gray-400 hover:text-white transition-all delay-75"
-            onClick={onClick}
-          >
+            onClick={onClick}>
             <Icon />
           </div>
         )}
@@ -43,4 +42,3 @@ export default function Input(props) {
     </div>
   );
 }
-

@@ -6,98 +6,29 @@ import Buttons from "../../../Components/buttons/Buttons";
 import Form from "../../../Components/form/Form";
 import SubLine from "../../../Components/subLine/SubLine";
 import Links from "../../../Components/links/Sublink/Links";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import CustomDate from "../../../Components/CustomDate/CustomDate";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import {
-  isPersian,
-  hasPersian,
-  toPersianChars,
-} from "@persian-tools/persian-tools";
+import Modal from "../../../Components/modal/modal";
+import { schema } from "../../../../validation";
+import { useNavigate } from "react-router-dom";
+import JalaliDatePicker from "../../../Components/JalaliDatePicker/JalaliDatePicker";
+import { useForm, Controller } from "react-hook-form";
 
 export default function SignupForm() {
-  const schema = yup.object().shape({
-    name: yup
-      .string()
-      .required("نام الزامی است")
-      .matches(/^[^0-9]+$/, "نام نباید شامل عدد باشد")
-      .matches(
-        /^[^!@#$%^&*()-_=+~`.<>?/";:]+$/,
-        "نام نباید حاوی کاراکتر خاص باشد"
-      )
-      .test("name", "نام باید با حروف فارسی وارد شود", isPersian),
-    lastName: yup
-      .string()
-      .required("نام خانوادگی الزامی است")
-      .matches(/^[^0-9]+$/, "نام خانوادگی نباید شامل عدد باشد")
-      .matches(
-        /^[^!@#$%^&*()-_=+~`.<>?/";:]+$/,
-        "نام خانوادگی نباید حاوی کاراکتر خاص باشد"
-      )
-      .test("lastname", "نام خانوادگی باید با حروف فارسی وارد شود", isPersian),
-
-    idNumber: yup
-      .string()
-      .required("کد ملی را وارد کنید")
-      .matches(/^\d{10}$/, "کدملی باید 10 عدد باشد")
-      .test("iranian-national-id", "کد ملی معتبر نیست", (value) => {
-        if (!value) return false;
-
-        // Convert the input into an array of numbers
-        const digits = value.split("").map(Number);
-
-        // Check for repeated digits (e.g., "1111111111" is invalid)
-        if (digits.every((digit) => digit === digits[0])) {
-          return false;
-        }
-
-        const check = digits.pop(); // last digit is the checksum
-        const sum = digits.reduce(
-          (acc, digit, idx) => acc + digit * (10 - idx),
-          0
-        );
-        const remainder = sum % 11;
-
-        return (
-          (remainder < 2 && check === remainder) ||
-          (remainder >= 2 && check === 11 - remainder)
-        );
-      }),
-
-    date: yup
-      .date()
-      .required("تاریخ تولد را وارد کنید")
-      .max(new Date(), "تاریخ باید در گذشته باشد"),
-    email: yup
-      .string()
-      .email("ایمیل معتبر وارد کتید")
-      .required("ایمیل الزامی است"),
-    phoneNumber: yup
-      .string()
-      .required("شماره تلفن الزامی است")
-      // .matches(/^\d{11}$/, "شماره تلفن باید حداقل 11 عدد باشد"),
-      .matches(/^09\d{9}$/, "شماره تلفن باید 11 رقم و با 09 شروع شود"),
-    username: yup.string().required("یوزر الزامی است"),
-
-    password: yup
-      .string()
-      .required("رمز الزامی است")
-      .min(8, "رمز حداقل باید 8 رقم باشد")
-      .matches(/[a-z]/, "رمز باید حداقل یک حرف کوچک داشته باشد")
-      .matches(/[A-Z]/, "رمز باید حداقل یک حرف بزرگ داشته باشد")
-      .matches(/\d/, "رمز باید حداقل یک عدد داشته باشد")
-      .matches(/[@$!%*?&]/, "رمز باید حداقل یه حرف مخصوص داشته باشد"),
-    confirmPassword: yup
-      .string()
-      .oneOf([yup.ref("password"), null], "رمز ها باید یکسان باشند")
-      .required("رمز را مجدد وارد کنید"),
-  });
-
   const [formStep, setFormStep] = useState(0);
   const [visibility, setVisibility] = useState(false);
+  const [passAppear, setPassAppear] = useState(false);
+  const [formData, setFormData] = useState({});
+  const [code, setCode] = useState({});
+  const [titleModal, setTitleModal] = useState(true);
+  const number = { phoneNumber: formData.phoneNumber };
+  const navigate = useNavigate();
+  const oncloseHandler = () => {
+    setPassAppear(false);
+  };
+
   const {
     control,
     register,
@@ -109,17 +40,85 @@ export default function SignupForm() {
     mode: "onChange",
   });
 
-  const onSubmit = (data) => {
-    console.log("Form submitted:", data);
+  const onChange = (e) => {
+    const id = e.target.id;
+    const value = e.target.value;
+
+    setCode((previousState) => ({ ...previousState, [id]: value }));
+  };
+
+  const onSubmit = async (data) => {
+    setFormData(data);
+    setPassAppear(!passAppear);
+  };
+
+  const reSendCode = async () => {
+    setTitleModal(false);
+    const responseSende = await fetch(
+      "https://internetbankvapi.liara.run/api/v1/Otp/send-otp",
+      {
+        method: "POST",
+        headers: {
+          accept: "*/*",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(number),
+      }
+    );
+  };
+
+  const verifyCode = async () => {
+    const merg = { ...code, ...number };
+    const responseVerify = await fetch(
+      "https://internetbankvapi.liara.run/api/v1/Otp/verify-otp",
+      {
+        method: "POST",
+        headers: {
+          accept: "*/*",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(merg),
+      }
+    );
+
+    setPassAppear(!passAppear);
+    console.log("res2:", responseVerify);
+    const d = await responseVerify.text();
+    console.log("d", d);
+
+    if (responseVerify.status === 200) {
+      const responseRegister = await fetch(
+        "https://internetbankvapi.liara.run/api/v1/User/register",
+        {
+          method: "POST",
+          headers: {
+            accept: "*/*",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${d}`,
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+      console.log("res3 :", responseRegister);
+      const x = await responseRegister.json();
+      console.log("x:", x);
+      if (responseRegister.status === 200) {
+        navigate("/");
+        setTimeout(() => {
+          alert(`کابر گرامی ثبتنام شما با موفقیت انجام شد.
+          برای ورود به پنل کاربری خود ایمیل و پسورد خود را وارد نمایید`);
+        }, 0);
+      }
+    }
   };
 
   const nextHandler = async () => {
     const currentStepFields =
       formStep === 0
-        ? ["name", "lastName", "idNumber"]
+        ? ["firstName", "lastName", "nationalCode"]
         : formStep === 1
-        ? ["date", "phoneNumber", "email"]
-        : ["username", "password", "confirmPassword"];
+        ? ["birthdate", "phoneNumber", "email"]
+        : ["password", "confirmPassword"];
 
     const isStepValid = await trigger(currentStepFields);
 
@@ -149,11 +148,11 @@ export default function SignupForm() {
               inputName="نام"
               type="text"
               placeholder="لطفا نام خود را وارد کنید"
-              id="name"
-              register={register("name")}
+              id="firstName"
+              register={register("firstName")}
             />
             <p style={{ color: "red", paddingBottom: "10px" }}>
-              {errors.name?.message}
+              {errors.firstName?.message}
             </p>
 
             <Input
@@ -173,28 +172,45 @@ export default function SignupForm() {
               inputName="کدملی"
               type="text"
               placeholder="لطفا کدملی خود را وارد کنید"
-              id="idNumber"
+              id="nationalCode"
               dir="ltr"
-              register={register("idNumber")}
+              register={register("nationalCode")}
+              className={"pl-4"}
             />
             <p style={{ color: "red", paddingBottom: "10px" }}>
-              {errors.idNumber?.message}
+              {errors.nationalCode?.message}
             </p>
           </>
         )}
 
         {formStep === 1 && (
           <>
-            <CustomDate
-              name="date"
+            {/* <CustomDate
+              name="birthdate"
               label="تاریخ تولد"
               control={control}
-              error={errors.date?.message}
+              error={errors.birthdate?.message}
               placeholder="انتخاب تاریخ"
+            /> */}
+
+            <h1 className="text-white  text-sm pb-2">تاریخ تولد</h1>
+
+            <Controller
+              name="birthdate"
+              control={control}
+              render={({ field }) => (
+                <JalaliDatePicker
+                  id="birthdate"
+                  type={"text"}
+                  {...field}
+                  onChange={(date) => field.onChange(date)}
+                  placeholder="تاریخ تولد خود را انتخاب کنید"
+                />
+              )}
             />
 
             <p style={{ color: "red", paddingBottom: "10px" }}>
-              {errors.date?.message}
+              {errors.birthdate?.message}
             </p>
 
             <Input
@@ -204,6 +220,7 @@ export default function SignupForm() {
               dir="ltr"
               id="phoneNumber"
               register={register("phoneNumber")}
+              className={"pl-4"}
             />
             <p style={{ color: "red", paddingBottom: "10px" }}>
               {errors.phoneNumber?.message}
@@ -216,6 +233,7 @@ export default function SignupForm() {
               dir="ltr"
               id="email"
               register={register("email")}
+              className={"pl-4"}
             />
             <p style={{ color: "red", paddingBottom: "10px" }}>
               {errors.email?.message}
@@ -232,17 +250,16 @@ export default function SignupForm() {
 
         {formStep === 2 && (
           <>
-            <Input
+            {/* <Input
               style={{ background: "#374151" }}
               inputName="نام کاربری"
               type="text"
               placeholder="لطفا نام کاربری خود را وارد کنید"
-              id="username"
               register={register("username")}
             />
             <p style={{ color: "red", paddingBottom: "10px" }}>
               {errors.username?.message}
-            </p>
+            </p> */}
 
             <Input
               inputName="رمز عبور"
@@ -294,6 +311,20 @@ export default function SignupForm() {
           <Links to="/login" linkName="ورود به حساب" />
         </SubLine>
       </Form>
+      {passAppear && (
+        <Modal
+          id="code"
+          onClick2={reSendCode}
+          onClick1={verifyCode}
+          onChange={onChange}
+          onClose={oncloseHandler}
+          FormTitle={
+            titleModal
+              ? "برای تایید شماره تلفن بروی ارسال کد کلیک نمایید"
+              : "کد ارسال شده بر روی تلفن خود را وارد نمایید و روی تایید کد کلیک کنید"
+          }
+        />
+      )}
     </ContainerTheme>
   );
 }

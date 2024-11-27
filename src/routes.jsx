@@ -9,6 +9,7 @@ import ChangingPass from "./Pages/changingPass/ChangingPass";
 import BlockingAccount from "./Pages/blockingAccount/BlockingAccount";
 import PooyaPass from "./Components/pooyaPass/PooyaPass";
 import AccountLists from "./Pages/AccountLists/AccountLists";
+import Modal from "./Components/modal/modal";
 
 let routes = [
   { path: "/homedata", element: <HomeData /> },
@@ -21,6 +22,7 @@ let routes = [
   { path: "/block", element: <BlockingAccount /> },
   { path: "/lists", element: <AccountLists /> },
   { path: "/pooya", element: <PooyaPass /> },
+  { path: "/modal", element: <Modal /> },
 
   { path: "*", element: <Error /> },
 ];

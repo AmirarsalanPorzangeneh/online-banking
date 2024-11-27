@@ -1,0 +1,27 @@
+.jalali-date-input {
+    text-align: left;
+    padding: 8px;
+    font-size: 16px;
+    outline: none;
+    background-color: #374151;
+    border-radius: 7px;
+    border:1px solid rgb(100, 97, 97);
+    color: rgb(224, 226, 226);
+    width: 344px;
+    margin-bottom: 20px;
+    
+    
+  }
+  
+  .jalali-date-container {
+    display: flex;
+    justify-content: center;
+    
+  }
+  
+  .jalali-calendar .rmdp-calendar {
+    background-color: #b9bdc3;
+    border-radius: 8px;
+    color: white;
+  }
+  

@@ -10,6 +10,7 @@ import ContainerTheme from "../../Layout/container/Container";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginForm() {
   const [visibility, setVisibility] = useState(false);
@@ -32,6 +33,7 @@ export default function LoginForm() {
       .matches(/\d/, "رمز باید حداقل از یک عدد تشکیل شود")
       .matches(/[@$!%*?&]/, "رمز عبور باید شامل حداقل یک خرف خاص باشد"),
   });
+  const navigate = useNavigate();
 
   const {
     register,
@@ -39,19 +41,34 @@ export default function LoginForm() {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
-  const onSubmit = (data) => {
-    console.log(data);
-    console.log("logged");
-  };
+  const onSubmit = async (data) => {
+    const res = await fetch(
+      "https://internetbankvapi.liara.run/api/v1/User/login",
+      {
+        method: "POST",
+        headers: {
+          accept: "*/*",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
+    console.log(res);
+    const c = await res.text();
+    console.log(c);
 
+    if (res.status === 200) {
+      localStorage.setItem("token", c);
+      navigate("/homedata");
+    }
+  };
   return (
     <>
       <ContainerTheme>
         <Form
           Header={"اینترنت بانک من"}
           FormTitle={"ورود به حساب کاربری"}
-          onSubmit={handleSubmit(onSubmit)}
-        >
+          onSubmit={handleSubmit(onSubmit)}>
           <Input
             inputName="پست الکترونیک"
             type="email"
